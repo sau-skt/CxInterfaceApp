@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/cardviewtouch"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="5dp"
+    android:layout_marginBottom="5dp"
+    android:layout_marginStart="10dp"
+    android:layout_marginEnd="10dp"
+    app:cardCornerRadius="15dp"
+    app:cardElevation="15dp"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <ImageView
+                    android:id="@+id/nt"
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:layout_margin="5dp"
+                    android:src="@drawable/rounded_button"
+                    android:scaleType="centerCrop"
+                    android:layout_centerVertical="true"/>
+
+                <TextView
+                    android:id="@+id/itemname"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_toEndOf="@id/nt"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginStart="5dp"
+                    android:layout_centerHorizontal="true"
+                    android:textSize="15sp"
+                    android:textColor="@color/black"
+                    android:maxLines="1"
+                    android:layout_toStartOf="@id/itemtype"
+                    android:layout_marginEnd="5dp"/>
+
+                <TextView
+                    android:id="@+id/itemdesc"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_toEndOf="@id/nt"
+                    android:layout_below="@id/itemname"
+                    android:layout_marginStart="5dp"
+                    android:layout_marginTop="5dp"
+                    android:maxLines="1"
+                    android:layout_toStartOf="@id/itemtype"
+                    android:layout_marginEnd="5dp"/>
+
+                <TextView
+                    android:id="@+id/itemprice"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/itemdesc"
+                    android:layout_toEndOf="@id/nt"
+                    android:layout_marginStart="5dp"
+                    android:layout_marginTop="5dp"
+                    android:maxLines="1"
+                    android:layout_toStartOf="@id/itemtype"
+                    android:layout_marginEnd="5dp"/>
+
+                <TextView
+                    android:id="@+id/itemcategory"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/itemprice"
+                    android:layout_toEndOf="@id/nt"
+                    android:layout_marginStart="5dp"
+                    android:layout_marginTop="5dp"
+                    android:maxLines="1"
+                    android:layout_toStartOf="@id/itemtype"
+                    android:layout_marginEnd="5dp"
+                    android:layout_marginBottom="10dp"/>
+
+                <ImageView
+                    android:id="@+id/itemtype"
+                    android:layout_width="15dp"
+                    android:layout_height="15dp"
+                    android:scaleType="centerCrop"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginEnd="5dp"/>
+
+
+
+
+
+            </RelativeLayout>
+
+</androidx.cardview.widget.CardView>
