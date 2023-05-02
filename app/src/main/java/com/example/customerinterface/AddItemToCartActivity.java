@@ -5,10 +5,13 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.Button;
 
+import com.example.customerinterface.adapters.AddItemToCartActivityAdapter;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -19,9 +22,9 @@ import java.util.ArrayList;
 
 public class AddItemToCartActivity extends AppCompatActivity {
 
-    Button tableIdBtn;
-    String tableId, username;
-    DatabaseReference Cxcategorydatabasereference, Cxitemdatabasereference;
+    Button tableIdBtn, viewcartBtn;
+    String tableId, username, uniqueid;
+    DatabaseReference Cxcategorydatabasereference, Cxitemdatabasereference, cxCartData;
     ArrayList<String> Categorylist = new ArrayList<>();
     ArrayList<String> Itemslist = new ArrayList<>();
     ArrayList<String> ItemsCategoryList = new ArrayList<>();
@@ -40,13 +43,16 @@ public class AddItemToCartActivity extends AppCompatActivity {
         setContentView(R.layout.activity_add_item_to_cart);
         tableIdBtn = findViewById(R.id.AddItemToCartActivityTableId);
         recyclerView = findViewById(R.id.AddItemToCartActivityRv);
+        viewcartBtn = findViewById(R.id.AddItemToCartActivityViewCart);
         tableId = getIntent().getStringExtra("table");
         username = getIntent().getStringExtra("username");
+        cxCartData = FirebaseDatabase.getInstance().getReference("CxCart").child(username);
+        uniqueid = cxCartData.push().getKey();
         tableIdBtn.setText("Table - " + tableId);
         layoutManager = new LinearLayoutManager(AddItemToCartActivity.this);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setHasFixedSize(true);
-        adapter = new AddItemToCartActivityAdapter(Item_Or_Category, Categorylist, Itemslist,ItemsPriceList, ItemsDescList, ItemsTypeList, ItemIdList, username);
+        adapter = new AddItemToCartActivityAdapter(Item_Or_Category, Categorylist, Itemslist,ItemsPriceList, ItemsDescList, ItemsTypeList, ItemIdList, username, uniqueid, cxCartData);
         recyclerView.setAdapter(adapter);
         Cxcategorydatabasereference = FirebaseDatabase.getInstance().getReference("SIDCxMenu").child(username);
         Cxitemdatabasereference = FirebaseDatabase.getInstance().getReference("SIDCxMenu").child(username);
@@ -102,6 +108,16 @@ public class AddItemToCartActivity extends AppCompatActivity {
             @Override
             public void onCancelled(DatabaseError databaseError) {
                 Log.e("FirebaseDemo", "onCancelled", databaseError.toException());
+            }
+        });
+
+        viewcartBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(AddItemToCartActivity.this,CxCartActivity.class);
+                intent.putExtra("uniqueId", uniqueid);
+                intent.putExtra("username", username);
+                startActivity(intent);
             }
         });
     }

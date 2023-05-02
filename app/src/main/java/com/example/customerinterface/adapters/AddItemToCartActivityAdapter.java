@@ -1,4 +1,4 @@
-package com.example.customerinterface;
+package com.example.customerinterface.adapters;
 
 import android.graphics.Color;
 import android.util.Log;
@@ -12,6 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.customerinterface.R;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -23,10 +24,10 @@ public class AddItemToCartActivityAdapter extends RecyclerView.Adapter<RecyclerV
     private static final int ITEM_VIEW_TYPE = 1;
 
     private ArrayList<String> item_or_category, CategoryList, ItemsList, ItemsPrice, ItemsDesc, ItemsType, ItemsIdList;
-    String username;
-    ArrayList<String> ItemsIdAddedToCart = new ArrayList<>();
+    String username, uniqueid;
+    DatabaseReference cxCartData;
 
-    public AddItemToCartActivityAdapter(ArrayList<String> item_or_category, ArrayList<String> CategoryList, ArrayList<String> ItemsList, ArrayList<String> ItemsPrice, ArrayList<String> ItemsDesc, ArrayList<String> ItemsType, ArrayList<String> ItemIdList, String username) {
+    public AddItemToCartActivityAdapter(ArrayList<String> item_or_category, ArrayList<String> CategoryList, ArrayList<String> ItemsList, ArrayList<String> ItemsPrice, ArrayList<String> ItemsDesc, ArrayList<String> ItemsType, ArrayList<String> ItemIdList, String username, String uniqueid, DatabaseReference cxCartData) {
         this.item_or_category = item_or_category;
         this.CategoryList = CategoryList;
         this.ItemsList = ItemsList;
@@ -35,6 +36,8 @@ public class AddItemToCartActivityAdapter extends RecyclerView.Adapter<RecyclerV
         this.ItemsType = ItemsType;
         this.ItemsIdList = ItemIdList;
         this.username = username;
+        this.uniqueid = uniqueid;
+        this.cxCartData = cxCartData;
     }
 
     @Override
@@ -70,7 +73,6 @@ public class AddItemToCartActivityAdapter extends RecyclerView.Adapter<RecyclerV
             ((ItemViewHolder) holder).ItemPrice.setText("\u20B9 " + ItemsPrice.get(position));
             ((ItemViewHolder) holder).ItemDesc.setText(ItemsDesc.get(position));
             ((ItemViewHolder) holder).cardView.setCardBackgroundColor(Color.parseColor("#FFFFFF"));
-            Log.e("QWERTY", String.valueOf(ItemsIdList));
             if (ItemsType.get(position).equals("Veg")) {
                 ((ItemViewHolder) holder).ItemType.setImageResource(R.drawable.vegetarian_food);
             } else {
@@ -81,12 +83,14 @@ public class AddItemToCartActivityAdapter extends RecyclerView.Adapter<RecyclerV
                 public void onClick(View view) {
                     if (((ItemViewHolder) holder).cardView.getCardBackgroundColor().getDefaultColor() == Color.parseColor("#FFFFFF")) {
                         ((ItemViewHolder) holder).cardView.setCardBackgroundColor(Color.parseColor("#FFFF00"));
-                        ItemsIdAddedToCart.add(ItemsIdList.get(position));
+                        cxCartData.child(uniqueid).child(ItemsIdList.get(position)).child("itemId").setValue(ItemsIdList.get(position));
+                        cxCartData.child(uniqueid).child(ItemsIdList.get(position)).child("itemname").setValue(ItemsList.get(position));
+                        cxCartData.child(uniqueid).child(ItemsIdList.get(position)).child("itemprice").setValue(ItemsPrice.get(position));
+
                     } else {
                         ((ItemViewHolder) holder).cardView.setCardBackgroundColor(Color.parseColor("#FFFFFF"));
-                        ItemsIdAddedToCart.remove(ItemsIdList.get(position));
+                        cxCartData.child(uniqueid).child(ItemsIdList.get(position)).removeValue();
                     }
-                    Log.e("QWERTY", String.valueOf(ItemsIdAddedToCart));
                 }
             });
         } else if (holder instanceof CategoryViewHolder) {
@@ -104,6 +108,7 @@ public class AddItemToCartActivityAdapter extends RecyclerView.Adapter<RecyclerV
         TextView ItemName, ItemDesc, ItemPrice;
         ImageView ItemType;
         CardView cardView;
+
         public ItemViewHolder(@NonNull View itemView) {
             super(itemView);
             // initialize views for item view holder
@@ -117,6 +122,7 @@ public class AddItemToCartActivityAdapter extends RecyclerView.Adapter<RecyclerV
 
     public static class CategoryViewHolder extends RecyclerView.ViewHolder {
         TextView CategoryName;
+
         public CategoryViewHolder(@NonNull View itemView) {
             super(itemView);
             // initialize views for category view holder
