@@ -13,8 +13,11 @@ import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.customerinterface.R;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
@@ -27,7 +30,7 @@ public class AddItemToCartActivityAdapter extends RecyclerView.Adapter<RecyclerV
     String username, uniqueid;
     DatabaseReference cxCartData;
 
-    public AddItemToCartActivityAdapter(ArrayList<String> item_or_category, ArrayList<String> CategoryList, ArrayList<String> ItemsList, ArrayList<String> ItemsPrice, ArrayList<String> ItemsDesc, ArrayList<String> ItemsType, ArrayList<String> ItemIdList, String username, String uniqueid, DatabaseReference cxCartData) {
+    public AddItemToCartActivityAdapter(ArrayList<String> item_or_category, ArrayList<String> CategoryList, ArrayList<String> ItemsList, ArrayList<String> ItemsPrice, ArrayList<String> ItemsDesc, ArrayList<String> ItemsType, ArrayList<String> ItemIdList, String username, String uniqueid) {
         this.item_or_category = item_or_category;
         this.CategoryList = CategoryList;
         this.ItemsList = ItemsList;
@@ -37,7 +40,7 @@ public class AddItemToCartActivityAdapter extends RecyclerView.Adapter<RecyclerV
         this.ItemsIdList = ItemIdList;
         this.username = username;
         this.uniqueid = uniqueid;
-        this.cxCartData = cxCartData;
+        cxCartData = FirebaseDatabase.getInstance().getReference("CxCart").child(username);
     }
 
     @Override
@@ -86,6 +89,20 @@ public class AddItemToCartActivityAdapter extends RecyclerView.Adapter<RecyclerV
                         cxCartData.child(uniqueid).child(ItemsIdList.get(position)).child("itemId").setValue(ItemsIdList.get(position));
                         cxCartData.child(uniqueid).child(ItemsIdList.get(position)).child("itemname").setValue(ItemsList.get(position));
                         cxCartData.child(uniqueid).child(ItemsIdList.get(position)).child("itemprice").setValue(ItemsPrice.get(position));
+                        cxCartData.child(uniqueid).child(ItemsIdList.get(position)).child("itemqty").setValue("1");
+                        cxCartData.child(uniqueid).child(ItemsIdList.get(position)).addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                int price = Integer.parseInt(String.valueOf(snapshot.child("itemprice").getValue(String.class)));
+                                int qty = Integer.parseInt(String.valueOf(snapshot.child("itemqty").getValue(String.class)));
+                                cxCartData.child(uniqueid).child(ItemsIdList.get(position)).child("itemtotal").setValue(String.valueOf(price * qty));
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError error) {
+
+                            }
+                        });
 
                     } else {
                         ((ItemViewHolder) holder).cardView.setCardBackgroundColor(Color.parseColor("#FFFFFF"));

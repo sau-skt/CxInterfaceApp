@@ -52,7 +52,7 @@ public class AddItemToCartActivity extends AppCompatActivity {
         layoutManager = new LinearLayoutManager(AddItemToCartActivity.this);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setHasFixedSize(true);
-        adapter = new AddItemToCartActivityAdapter(Item_Or_Category, Categorylist, Itemslist,ItemsPriceList, ItemsDescList, ItemsTypeList, ItemIdList, username, uniqueid, cxCartData);
+        adapter = new AddItemToCartActivityAdapter(Item_Or_Category, Categorylist, Itemslist,ItemsPriceList, ItemsDescList, ItemsTypeList, ItemIdList, username, uniqueid);
         recyclerView.setAdapter(adapter);
         Cxcategorydatabasereference = FirebaseDatabase.getInstance().getReference("SIDCxMenu").child(username);
         Cxitemdatabasereference = FirebaseDatabase.getInstance().getReference("SIDCxMenu").child(username);

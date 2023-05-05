@@ -10,16 +10,26 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.customerinterface.R;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 
 public class CxCartActivityAdapter extends RecyclerView.Adapter<CxCartActivityAdapter.MyViewHolder> {
 
-    ArrayList<String> ItemName, ItemPrice;
+    ArrayList<String> itemName, itemPrice, itemIds, itemQty;
+    DatabaseReference cxCartData;
+    String username, uniqueId;
 
-    public CxCartActivityAdapter(ArrayList<String> itemName, ArrayList<String> itemPrice) {
-        ItemName = itemName;
-        ItemPrice = itemPrice;
+    public CxCartActivityAdapter(ArrayList<String> itemName, ArrayList<String> itemPrice, ArrayList<String> itemIds, String username, String uniqueId, ArrayList<String> itemQty) {
+        this.itemName = itemName;
+        this.itemPrice = itemPrice;
+        this.itemQty = itemQty;
+        this.username = username;
+        this.uniqueId = uniqueId;
+        this.cxCartData = FirebaseDatabase.getInstance().getReference("CxCart").child(username).child(uniqueId);
+        this.itemIds = itemIds;
     }
 
     @NonNull
@@ -31,26 +41,34 @@ public class CxCartActivityAdapter extends RecyclerView.Adapter<CxCartActivityAd
 
     @Override
     public void onBindViewHolder(@NonNull CxCartActivityAdapter.MyViewHolder holder, int position) {
-        holder.itemname.setText(ItemName.get(position));
-        holder.itemprice.setText(ItemPrice.get(position));
+        holder.itemname.setText(itemName.get(position));
+        holder.itemprice.setText(itemPrice.get(position));
         holder.itemqty.setText("1");
         holder.add.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 holder.itemqty.setText(String.valueOf(Integer.parseInt(holder.itemqty.getText().toString()) + 1));
+                itemQty.set(position,String.valueOf(holder.itemqty.getText()));
+                cxCartData.child(itemIds.get(position)).child("itemqty").setValue(String.valueOf(holder.itemqty.getText()));
+                cxCartData.child(itemIds.get(position)).child("itemtotal").setValue(String.valueOf(Integer.parseInt(holder.itemqty.getText().toString()) * Integer.parseInt(itemPrice.get(position))));
             }
         });
         holder.substract.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                holder.itemqty.setText(String.valueOf(Integer.parseInt(holder.itemqty.getText().toString()) - 1));
+                if (Integer.parseInt(holder.itemqty.getText().toString()) > 1) {
+                    holder.itemqty.setText(String.valueOf(Integer.parseInt(holder.itemqty.getText().toString()) - 1));
+                    itemQty.set(position,String.valueOf(holder.itemqty.getText()));
+                    cxCartData.child(itemIds.get(position)).child("itemqty").setValue(String.valueOf(holder.itemqty.getText()));
+                    cxCartData.child(itemIds.get(position)).child("itemtotal").setValue(String.valueOf(Integer.parseInt(holder.itemqty.getText().toString()) * Integer.parseInt(itemPrice.get(position))));
+                }
             }
         });
     }
 
     @Override
     public int getItemCount() {
-        return ItemName.size();
+        return itemName.size();
     }
 
     public class MyViewHolder extends RecyclerView.ViewHolder {

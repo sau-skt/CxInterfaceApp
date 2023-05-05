@@ -70,7 +70,7 @@ public class MainActivity extends AppCompatActivity {
             Password = String.valueOf(map.get("Password"));
             Table = String.valueOf(map.get("Table"));
 
-            databaseReference.addValueEventListener(new ValueEventListener() {
+            databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                     // Iterate through each child node of the SID node

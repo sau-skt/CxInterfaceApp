@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/scroll_view"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp">
+
+        <TextView
+            android:id="@+id/qwe"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:maxLines="1"
+            android:text="--------------------------------------------------------------------------------------------------------------------"
+            android:textStyle="bold"
+            android:textSize="20sp"
+            android:textColor="@color/black"/>
+
+        <TextView
+            android:id="@+id/rty"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/qwe"
+            android:textColor="@color/black"
+            android:textStyle="bold"
+            android:text="Your order number is"
+            android:textAlignment="center"
+            android:textSize="35sp"/>
+
+        <TextView
+            android:id="@+id/invoice_number_textview"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/black"
+            android:text="1"
+            android:layout_below="@id/rty"
+            android:textAlignment="center"
+            android:textSize="50sp"
+            android:textStyle="bold"/>
+
+        <TextView
+            android:id="@+id/uio"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:maxLines="1"
+            android:layout_below="@id/invoice_number_textview"
+            android:text="--------------------------------------------------------------------------------------------------------------------"
+            android:textStyle="bold"
+            android:textSize="20sp"
+            android:textColor="@color/black"/>
+
+        <TextView
+            android:id="@+id/item_name_list_textview"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/uio"
+            android:text="Item Name\n\n"
+            android:layout_alignParentStart="true"
+            android:layout_toStartOf="@id/item_qty_list_textview"
+            android:layout_marginEnd="10dp"
+            android:textColor="@color/black"
+            android:textStyle="bold"
+            android:textSize="20sp"/>
+
+        <TextView
+            android:id="@+id/item_qty_list_textview"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Item Qty\n\n"
+            android:layout_toStartOf="@id/item_price_list_textview"
+            android:layout_below="@id/uio"
+            android:textSize="20sp"
+            android:textColor="@color/black"
+            android:textAlignment="center"
+            android:textStyle="bold"
+            android:layout_marginEnd="10dp"/>
+
+        <TextView
+            android:id="@+id/item_price_list_textview"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/uio"
+            android:layout_alignParentEnd="true"
+            android:text="Item Price\n\n"
+            android:textAlignment="center"
+            android:textColor="@color/black"
+            android:textSize="20sp"
+            android:textStyle="bold"/>
+
+        <TextView
+            android:id="@+id/item_total_textview"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/item_name_list_textview"
+            android:text="Total"
+            android:textStyle="bold"
+            android:textSize="20sp"
+            android:textColor="@color/black"/>
+
+
+
+    </RelativeLayout>
+
+</ScrollView>
