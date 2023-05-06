@@ -20,7 +20,10 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.Locale;
 
 public class CxCartActivity extends AppCompatActivity {
 
@@ -108,6 +111,9 @@ public class CxCartActivity extends AppCompatActivity {
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                         invoicenumber = Integer.parseInt(snapshot.getValue(String.class));
                         cxinvoicenumber.setValue(String.valueOf(invoicenumber + 1));
+                        long timestamp = System.currentTimeMillis();
+                        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
+                        String dateString = dateFormat.format(new Date(timestamp));
                         for (int i = 0; i < ItemName.size(); i++) {
                             cxorderreceived.child(String.valueOf(invoicenumber)).child(ItemIds.get(i)).child("itemname").setValue(ItemName.get(i));
                             cxorderreceived.child(String.valueOf(invoicenumber)).child(ItemIds.get(i)).child("itemprice").setValue(ItemPrice.get(i));
@@ -115,6 +121,7 @@ public class CxCartActivity extends AppCompatActivity {
                             cxorderreceived.child(String.valueOf(invoicenumber)).child(ItemIds.get(i)).child("itemId").setValue(ItemIds.get(i));
                             cxorderreceived.child(String.valueOf(invoicenumber)).child(ItemIds.get(i)).child("itemtotal").setValue(ItemTotal.get(i));
                         }
+                        cxorderreceived.child(String.valueOf(invoicenumber)).child("invoicedate").setValue(dateString);
                         cxCartData.removeValue();
                         Intent intent = new Intent(CxCartActivity.this,OrderStatusActivity.class);
                         intent.putExtra("invoicenumber", invoicenumber);
