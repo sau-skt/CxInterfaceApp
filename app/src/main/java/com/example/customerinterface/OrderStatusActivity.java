@@ -1,5 +1,6 @@
 package com.example.customerinterface;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.Dialog;
@@ -15,14 +16,25 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.TextView;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
 import java.util.ArrayList;
 
 public class OrderStatusActivity extends AppCompatActivity {
 
-    TextView invoicenumber, item_name_list, item_qty_list, item_price_list, total;
+    TextView invoicenumber, item_name_list, item_qty_list, item_price_list, total, calculation;
     ArrayList<String> itemnamelist, itemqtylist, itempricelist;
+    ArrayList<String> taxnamelist = new ArrayList<>();
+    ArrayList<String> taxpercentlist = new ArrayList<>();
     int itemtotal, invoice_number;
     int qtylist = 0;
+    float ordertotal = 0;
+    String username;
+    DatabaseReference taxdata;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,13 +45,50 @@ public class OrderStatusActivity extends AppCompatActivity {
         item_qty_list = findViewById(R.id.item_qty_list_textview);
         item_price_list = findViewById(R.id.item_price_list_textview);
         total = findViewById(R.id.item_total_textview);
+        calculation = findViewById(R.id.cal_textview);
+        username = getIntent().getStringExtra("username");
+        taxdata = FirebaseDatabase.getInstance().getReference("TaxData").child(username);
         itemnamelist = getIntent().getStringArrayListExtra("itemnamelist");
         itempricelist = getIntent().getStringArrayListExtra("itempricelist");
         itemqtylist = getIntent().getStringArrayListExtra("itemqtylist");
         itemtotal = getIntent().getIntExtra("itemtotal",0);
         invoice_number = getIntent().getIntExtra("invoicenumber",0);
+
+        taxdata.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                taxnamelist.clear();
+                taxpercentlist.clear();
+                for (DataSnapshot itemSnapshot : snapshot.getChildren()){
+                    String taxname = itemSnapshot.child("taxname").getValue(String.class);
+                    String taxpercent = itemSnapshot.child("taxpercent").getValue(String.class);
+                    taxnamelist.add(taxname);
+                    taxpercentlist.add(taxpercent);
+                }
+                total.append("\n\nSub-Total " + "\n");
+                calculation.append("\n\n" + String.valueOf(itemtotal) + "\n");
+                ordertotal = itemtotal;
+                for (int i = 0; i < taxnamelist.size(); i++) {
+                    total.append(taxnamelist.get(i) + "  " + taxpercentlist.get(i) + "% " + "\n");
+                    float roundednum = Math.round((itemtotal * (Float.parseFloat(taxpercentlist.get(i))) / 100) * 100.0) / 100.0f;
+                    String formattednum = String.format("%.2f", roundednum);
+                    calculation.append(formattednum + "\n");
+                    ordertotal = ordertotal + (Float.parseFloat(formattednum));
+                }
+                total.append("Total");
+                float roundedNum = Math.round(ordertotal * 100.0) / 100.0f;
+                String formattedNum = String.format("%.2f", roundedNum);
+                calculation.append(formattedNum);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
         for (int i = 0; i < itemnamelist.size(); i++) {
-            item_name_list.append("\n\n" + (CharSequence) itemnamelist.get(i));
+            item_name_list.append("\n\n" + itemnamelist.get(i));
         }
         item_name_list.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
             @Override
@@ -63,7 +112,6 @@ public class OrderStatusActivity extends AppCompatActivity {
 
 // Print the blank line counts for each line
                 for (int i = 0; i < blankLineCounts.length - 1; i++) {
-                    Log.d("QWE", "Line " + i + ": " + blankLineCounts[i]);
                     if (blankLineCounts[i] == 0 && blankLineCounts[i+1] == 1) {
                         item_qty_list.append("\n\n");
                         item_price_list.append("\n\n");
@@ -85,7 +133,6 @@ public class OrderStatusActivity extends AppCompatActivity {
             }
         });
         invoicenumber.setText(String.valueOf(invoice_number));
-        total.setText("\n\nTotal " + String.valueOf(itemtotal) + "\n\n");
 
     }
 }

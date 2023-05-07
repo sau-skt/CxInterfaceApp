@@ -92,10 +92,19 @@
 
         <TextView
             android:id="@+id/item_total_textview"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/item_name_list_textview"
-            android:text="Total"
+            android:textStyle="bold"
+            android:textSize="20sp"
+            android:textColor="@color/black"/>
+
+        <TextView
+            android:id="@+id/cal_textview"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/item_name_list_textview"
+            android:layout_alignParentEnd="true"
             android:textStyle="bold"
             android:textSize="20sp"
             android:textColor="@color/black"/>
