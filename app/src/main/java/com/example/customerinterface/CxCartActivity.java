@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.customerinterface.adapters.CxCartActivityAdapter;
 import com.google.firebase.database.DataSnapshot;
@@ -103,40 +104,44 @@ public class CxCartActivity extends AppCompatActivity {
         placeorder.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                cxinvoicenumber.addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        invoicenumber = Integer.parseInt(snapshot.getValue(String.class));
-                        cxinvoicenumber.setValue(String.valueOf(invoicenumber + 1));
-                        long timestamp = System.currentTimeMillis();
-                        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
-                        String dateString = dateFormat.format(new Date(timestamp));
-                        for (int i = 0; i < ItemName.size(); i++) {
-                            cxorderreceived.child(String.valueOf(invoicenumber)).child(ItemIds.get(i)).child("itemname").setValue(ItemName.get(i));
-                            cxorderreceived.child(String.valueOf(invoicenumber)).child(ItemIds.get(i)).child("itemprice").setValue(ItemPrice.get(i));
-                            cxorderreceived.child(String.valueOf(invoicenumber)).child(ItemIds.get(i)).child("itemqty").setValue(ItemQty.get(i));
-                            cxorderreceived.child(String.valueOf(invoicenumber)).child(ItemIds.get(i)).child("itemId").setValue(ItemIds.get(i));
-                            cxorderreceived.child(String.valueOf(invoicenumber)).child(ItemIds.get(i)).child("itemtotal").setValue(ItemTotal.get(i));
+                if (!ItemName.isEmpty()) {
+                    cxinvoicenumber.addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            invoicenumber = Integer.parseInt(snapshot.getValue(String.class));
+                            cxinvoicenumber.setValue(String.valueOf(invoicenumber + 1));
+                            long timestamp = System.currentTimeMillis();
+                            SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
+                            String dateString = dateFormat.format(new Date(timestamp));
+                            for (int i = 0; i < ItemName.size(); i++) {
+                                cxorderreceived.child(String.valueOf(invoicenumber)).child(ItemIds.get(i)).child("itemname").setValue(ItemName.get(i));
+                                cxorderreceived.child(String.valueOf(invoicenumber)).child(ItemIds.get(i)).child("itemprice").setValue(ItemPrice.get(i));
+                                cxorderreceived.child(String.valueOf(invoicenumber)).child(ItemIds.get(i)).child("itemqty").setValue(ItemQty.get(i));
+                                cxorderreceived.child(String.valueOf(invoicenumber)).child(ItemIds.get(i)).child("itemId").setValue(ItemIds.get(i));
+                                cxorderreceived.child(String.valueOf(invoicenumber)).child(ItemIds.get(i)).child("itemtotal").setValue(ItemTotal.get(i));
+                            }
+                            cxorderreceived.child(String.valueOf(invoicenumber)).child("invoicedate").setValue(dateString);
+                            cxCartData.removeValue();
+                            Intent intent = new Intent(CxCartActivity.this, OrderInvoiceActivity.class);
+                            intent.putExtra("invoicenumber", invoicenumber);
+                            intent.putExtra("username", username);
+                            intent.putExtra("itemnamelist", ItemName);
+                            intent.putExtra("itempricelist", ItemTotal);
+                            intent.putExtra("itemqtylist", ItemQty);
+                            intent.putExtra("itemtotal", sum);
+                            intent.putExtra("username", username);
+                            startActivity(intent);
+                            finish();
                         }
-                        cxorderreceived.child(String.valueOf(invoicenumber)).child("invoicedate").setValue(dateString);
-                        cxCartData.removeValue();
-                        Intent intent = new Intent(CxCartActivity.this, OrderInvoiceActivity.class);
-                        intent.putExtra("invoicenumber", invoicenumber);
-                        intent.putExtra("username", username);
-                        intent.putExtra("itemnamelist",ItemName);
-                        intent.putExtra("itempricelist",ItemTotal);
-                        intent.putExtra("itemqtylist",ItemQty);
-                        intent.putExtra("itemtotal",sum);
-                        intent.putExtra("username",username);
-                        startActivity(intent);
-                        finish();
-                    }
 
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError error) {
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
 
-                    }
-                });
+                        }
+                    });
+                } else {
+                    Toast.makeText(CxCartActivity.this, "The cart is empty, select items", Toast.LENGTH_SHORT).show();
+                }
             }
         });
     }

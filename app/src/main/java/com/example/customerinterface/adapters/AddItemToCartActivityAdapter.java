@@ -26,17 +26,18 @@ public class AddItemToCartActivityAdapter extends RecyclerView.Adapter<RecyclerV
     private static final int CATEGORY_VIEW_TYPE = 0;
     private static final int ITEM_VIEW_TYPE = 1;
 
-    private ArrayList<String> item_or_category, CategoryList, ItemsList, ItemsPrice, ItemsDesc, ItemsType, ItemsIdList;
+    private ArrayList<String> item_or_category, CategoryList, ItemsList, ItemsPrice, ItemsDesc, ItemsType, ItemsIdList, ItemsCategoryList;
     String username, uniqueid;
     DatabaseReference cxCartData;
 
-    public AddItemToCartActivityAdapter(ArrayList<String> item_or_category, ArrayList<String> CategoryList, ArrayList<String> ItemsList, ArrayList<String> ItemsPrice, ArrayList<String> ItemsDesc, ArrayList<String> ItemsType, ArrayList<String> ItemIdList, String username, String uniqueid) {
+    public AddItemToCartActivityAdapter(ArrayList<String> item_or_category, ArrayList<String> CategoryList, ArrayList<String> ItemsList, ArrayList<String> ItemsPrice, ArrayList<String> ItemsDesc, ArrayList<String> ItemsType, ArrayList<String> ItemIdList, String username, String uniqueid, ArrayList<String> ItemsCategoryList) {
         this.item_or_category = item_or_category;
         this.CategoryList = CategoryList;
         this.ItemsList = ItemsList;
         this.ItemsPrice = ItemsPrice;
         this.ItemsDesc = ItemsDesc;
         this.ItemsType = ItemsType;
+        this.ItemsCategoryList = ItemsCategoryList;
         this.ItemsIdList = ItemIdList;
         this.username = username;
         this.uniqueid = uniqueid;

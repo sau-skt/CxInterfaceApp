@@ -52,12 +52,12 @@ public class AddItemToCartActivity extends AppCompatActivity {
         layoutManager = new LinearLayoutManager(AddItemToCartActivity.this);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setHasFixedSize(true);
-        adapter = new AddItemToCartActivityAdapter(Item_Or_Category, Categorylist, Itemslist,ItemsPriceList, ItemsDescList, ItemsTypeList, ItemIdList, username, uniqueid);
+        adapter = new AddItemToCartActivityAdapter(Item_Or_Category, Categorylist, Itemslist,ItemsPriceList, ItemsDescList, ItemsTypeList, ItemIdList, username, uniqueid, ItemsCategoryList);
         recyclerView.setAdapter(adapter);
         Cxcategorydatabasereference = FirebaseDatabase.getInstance().getReference("SIDCxMenu").child(username);
         Cxitemdatabasereference = FirebaseDatabase.getInstance().getReference("SIDCxMenu").child(username);
 
-        Cxcategorydatabasereference.addListenerForSingleValueEvent(new ValueEventListener() {
+        Cxcategorydatabasereference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 Categorylist.clear();
@@ -66,10 +66,10 @@ public class AddItemToCartActivity extends AppCompatActivity {
                 Item_Or_Category.clear();
                 for (DataSnapshot categorySnapshot : dataSnapshot.getChildren()) {
                     String category = categorySnapshot.getKey();
-                    ItemsCategoryList.add(category);
-                    Cxitemdatabasereference.child(category).addListenerForSingleValueEvent(new ValueEventListener() {
+                    Cxitemdatabasereference.child(category).addValueEventListener(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            ItemsCategoryList.add(category);
                             Item_Or_Category.add("Category");
                             Categorylist.add(category);
                             Itemslist.add(category);
@@ -84,14 +84,17 @@ public class AddItemToCartActivity extends AppCompatActivity {
                                 String itemPrice = itemSnapshot.child("itemprice").getValue(String.class);
                                 String itemDesc = itemSnapshot.child("itemdescription").getValue(String.class);
                                 String itemType = itemSnapshot.child("itemtype").getValue(String.class);
-                                Itemslist.add(itemName);
-                                ItemsCategoryList.add(itemcategoryname);
-                                ItemsPriceList.add(itemPrice);
-                                ItemsDescList.add(itemDesc);
-                                ItemsTypeList.add(itemType);
-                                ItemIdList.add(itemId);
-                                Item_Or_Category.add("Item");
-                                Categorylist.add(itemName);
+                                String itemStock = itemSnapshot.child("instock").getValue(String.class);
+                                if (itemStock.equals("true")){
+                                    Itemslist.add(itemName);
+                                    ItemsCategoryList.add(itemcategoryname);
+                                    ItemsPriceList.add(itemPrice);
+                                    ItemsDescList.add(itemDesc);
+                                    ItemsTypeList.add(itemType);
+                                    ItemIdList.add(itemId);
+                                    Item_Or_Category.add("Item");
+                                    Categorylist.add(itemName);
+                                }
                             }
                             adapter.notifyDataSetChanged();
                         }
