@@ -7,12 +7,9 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
-import android.widget.Adapter;
 import android.widget.TextView;
 
-import com.example.customerinterface.adapters.AddItemToCartActivityAdapter;
 import com.example.customerinterface.adapters.CxCartActivityAdapter;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -123,7 +120,7 @@ public class CxCartActivity extends AppCompatActivity {
                         }
                         cxorderreceived.child(String.valueOf(invoicenumber)).child("invoicedate").setValue(dateString);
                         cxCartData.removeValue();
-                        Intent intent = new Intent(CxCartActivity.this,OrderStatusActivity.class);
+                        Intent intent = new Intent(CxCartActivity.this, OrderInvoiceActivity.class);
                         intent.putExtra("invoicenumber", invoicenumber);
                         intent.putExtra("username", username);
                         intent.putExtra("itemnamelist",ItemName);

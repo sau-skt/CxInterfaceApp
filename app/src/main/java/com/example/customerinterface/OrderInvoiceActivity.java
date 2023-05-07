@@ -3,17 +3,8 @@ package com.example.customerinterface;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.app.Dialog;
-import android.content.Context;
 import android.os.Bundle;
-import android.text.Editable;
-import android.text.Layout;
-import android.text.TextWatcher;
-import android.util.Log;
-import android.view.View;
 import android.view.ViewTreeObserver;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.TextView;
 
 import com.google.firebase.database.DataSnapshot;
@@ -24,7 +15,7 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
-public class OrderStatusActivity extends AppCompatActivity {
+public class OrderInvoiceActivity extends AppCompatActivity {
 
     TextView invoicenumber, item_name_list, item_qty_list, item_price_list, total, calculation;
     ArrayList<String> itemnamelist, itemqtylist, itempricelist;
@@ -39,7 +30,7 @@ public class OrderStatusActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_order_status);
+        setContentView(R.layout.activity_order_invoice);
         invoicenumber = findViewById(R.id.invoice_number_textview);
         item_name_list = findViewById(R.id.item_name_list_textview);
         item_qty_list = findViewById(R.id.item_qty_list_textview);
