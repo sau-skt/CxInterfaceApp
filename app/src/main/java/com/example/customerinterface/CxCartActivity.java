@@ -25,8 +25,8 @@ import java.util.Locale;
 
 public class CxCartActivity extends AppCompatActivity {
 
-    DatabaseReference cxCartData, cxinvoicenumber, cxorderreceived;
-    String uniqueId, username;
+    DatabaseReference cxCartData, cxinvoicenumber, cxorderreceived, tablereference;
+    String uniqueId, username, tableId;
     ArrayList<String> ItemName = new ArrayList<>();
     ArrayList<String> ItemPrice = new ArrayList<>();
     ArrayList<String> ItemIds = new ArrayList<>();
@@ -44,11 +44,13 @@ public class CxCartActivity extends AppCompatActivity {
         setContentView(R.layout.activity_cx_cart);
         uniqueId = getIntent().getStringExtra("uniqueId");
         username = getIntent().getStringExtra("username");
+        tableId = getIntent().getStringExtra("tableId");
         ordertotal = findViewById(R.id.order_total);
         placeorder = findViewById(R.id.place_order);
         cxCartData = FirebaseDatabase.getInstance().getReference("CxCart").child(username).child(uniqueId);
         cxinvoicenumber = FirebaseDatabase.getInstance().getReference("SID").child(username).child("invoicenumber");
         cxorderreceived = FirebaseDatabase.getInstance().getReference("CxOrder").child(username);
+        tablereference = FirebaseDatabase.getInstance().getReference("TableInfo").child(username).child("Table - " + tableId);
         recyclerView = findViewById(R.id.activity_cx_cart_rv);
         layoutManager = new LinearLayoutManager(CxCartActivity.this);
         recyclerView.setLayoutManager(layoutManager);
@@ -121,6 +123,8 @@ public class CxCartActivity extends AppCompatActivity {
                                 cxorderreceived.child(String.valueOf(invoicenumber)).child(ItemIds.get(i)).child("itemtotal").setValue(ItemTotal.get(i));
                             }
                             cxorderreceived.child(String.valueOf(invoicenumber)).child("invoicedate").setValue(dateString);
+                            tablereference.child("availibility").setValue("false");
+                            tablereference.child("invoicenumber").setValue(String.valueOf(invoicenumber));
                             cxCartData.removeValue();
                             Intent intent = new Intent(CxCartActivity.this, OrderInvoiceActivity.class);
                             intent.putExtra("date",dateString);

@@ -120,6 +120,7 @@ public class AddItemToCartActivity extends AppCompatActivity {
                 Intent intent = new Intent(AddItemToCartActivity.this,CxCartActivity.class);
                 intent.putExtra("uniqueId", uniqueid);
                 intent.putExtra("username", username);
+                intent.putExtra("tableId", tableId);
                 startActivity(intent);
             }
         });

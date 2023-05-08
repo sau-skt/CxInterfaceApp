@@ -24,14 +24,15 @@ import java.util.Map;
 
 public class MainActivity extends AppCompatActivity {
 
-    String res, SID, Password, Table;
-    DatabaseReference databaseReference;
+    String res, SID, Table;
+    DatabaseReference databaseReference, tablereference;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         databaseReference = FirebaseDatabase.getInstance().getReference("SID");
+        tablereference = FirebaseDatabase.getInstance().getReference("TableInfo");
         scancode();
     }
 
@@ -67,7 +68,6 @@ public class MainActivity extends AppCompatActivity {
                 map.put(key, value);
             }
             SID = String.valueOf(map.get("SID"));
-            Password = String.valueOf(map.get("Password"));
             Table = String.valueOf(map.get("Table"));
 
             databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -77,16 +77,36 @@ public class MainActivity extends AppCompatActivity {
                     for (DataSnapshot sidSnapshot : dataSnapshot.getChildren()) {
                         String username = sidSnapshot.child("username").getValue(String.class);
                         String password = sidSnapshot.child("password").getValue(String.class);
-                        if (SID.equals(username) && Password.equals(password)){
-                            Intent intent = new Intent(MainActivity.this, AddItemToCartActivity.class);
-                            intent.putExtra("username",username);
-                            intent.putExtra("table",Table);
-                            startActivity(intent);
-                            finish();
+                        if (SID.equals(username)) {
+                            tablereference.child(SID).child("Table - " + Table).addListenerForSingleValueEvent(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                    String status = snapshot.child("availibility").getValue(String.class);
+                                    if (status.equals("false")) {
+                                        Intent intent = new Intent(MainActivity.this, OccupiedTableInvoiceActivity.class);
+                                        intent.putExtra("username", username);
+                                        intent.putExtra("table", Table);
+                                        startActivity(intent);
+                                        finish();
+                                    } else {
+                                        Intent intent = new Intent(MainActivity.this, AddItemToCartActivity.class);
+                                        intent.putExtra("username", username);
+                                        intent.putExtra("table", Table);
+                                        startActivity(intent);
+                                        finish();
+                                    }
+                                }
+
+                                @Override
+                                public void onCancelled(@NonNull DatabaseError error) {
+
+                                }
+                            });
                             break;
                         }
                     }
                 }
+
 
                 @Override
                 public void onCancelled(@NonNull DatabaseError error) {
