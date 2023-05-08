@@ -42,11 +42,21 @@
             android:textStyle="bold"/>
 
         <TextView
+            android:id="@+id/invoice_date_textview"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/invoice_number_textview"
+            android:textColor="@color/black"
+            android:textAlignment="center"
+            android:textSize="25sp"
+            android:textStyle="bold"/>
+
+        <TextView
             android:id="@+id/uio"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:maxLines="1"
-            android:layout_below="@id/invoice_number_textview"
+            android:layout_below="@id/invoice_date_textview"
             android:text="--------------------------------------------------------------------------------------------------------------------"
             android:textStyle="bold"
             android:textSize="20sp"

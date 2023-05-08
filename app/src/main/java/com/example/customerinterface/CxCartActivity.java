@@ -123,6 +123,7 @@ public class CxCartActivity extends AppCompatActivity {
                             cxorderreceived.child(String.valueOf(invoicenumber)).child("invoicedate").setValue(dateString);
                             cxCartData.removeValue();
                             Intent intent = new Intent(CxCartActivity.this, OrderInvoiceActivity.class);
+                            intent.putExtra("date",dateString);
                             intent.putExtra("invoicenumber", invoicenumber);
                             intent.putExtra("username", username);
                             intent.putExtra("itemnamelist", ItemName);

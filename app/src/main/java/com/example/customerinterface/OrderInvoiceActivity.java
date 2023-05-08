@@ -17,14 +17,14 @@ import java.util.ArrayList;
 
 public class OrderInvoiceActivity extends AppCompatActivity {
 
-    TextView invoicenumber, item_name_list, item_qty_list, item_price_list, total, calculation;
+    TextView invoicenumber, item_name_list, item_qty_list, item_price_list, total, calculation, invoice_date;
     ArrayList<String> itemnamelist, itemqtylist, itempricelist;
     ArrayList<String> taxnamelist = new ArrayList<>();
     ArrayList<String> taxpercentlist = new ArrayList<>();
     int itemtotal, invoice_number;
     int qtylist = 0;
     float ordertotal = 0;
-    String username;
+    String username, date;
     DatabaseReference taxdata;
 
     @Override
@@ -34,16 +34,20 @@ public class OrderInvoiceActivity extends AppCompatActivity {
         invoicenumber = findViewById(R.id.invoice_number_textview);
         item_name_list = findViewById(R.id.item_name_list_textview);
         item_qty_list = findViewById(R.id.item_qty_list_textview);
+        invoice_date = findViewById(R.id.invoice_date_textview);
         item_price_list = findViewById(R.id.item_price_list_textview);
         total = findViewById(R.id.item_total_textview);
         calculation = findViewById(R.id.cal_textview);
         username = getIntent().getStringExtra("username");
+        date = getIntent().getStringExtra("date");
         taxdata = FirebaseDatabase.getInstance().getReference("TaxData").child(username);
         itemnamelist = getIntent().getStringArrayListExtra("itemnamelist");
         itempricelist = getIntent().getStringArrayListExtra("itempricelist");
         itemqtylist = getIntent().getStringArrayListExtra("itemqtylist");
         itemtotal = getIntent().getIntExtra("itemtotal",0);
         invoice_number = getIntent().getIntExtra("invoicenumber",0);
+
+        invoice_date.setText("Invoice Date - " + date);
 
         taxdata.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
