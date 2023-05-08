@@ -46,7 +46,7 @@ public class OccupiedTableInvoiceActivity extends AppCompatActivity {
         item_price_list = findViewById(R.id.item_price_list_textview);
         calculation = findViewById(R.id.cal_textview);
         taxdata = FirebaseDatabase.getInstance().getReference("TaxData").child(username);
-        Tablereference = FirebaseDatabase.getInstance().getReference("TableInfo").child(username).child("Table - " + tableId);
+        Tablereference = FirebaseDatabase.getInstance().getReference("TableInfo").child(username).child(tableId);
         CxOrderReference = FirebaseDatabase.getInstance().getReference("CxOrder").child(username);
 
         Tablereference.addListenerForSingleValueEvent(new ValueEventListener() {

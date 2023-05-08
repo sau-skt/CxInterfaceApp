@@ -78,7 +78,7 @@ public class MainActivity extends AppCompatActivity {
                         String username = sidSnapshot.child("username").getValue(String.class);
                         String password = sidSnapshot.child("password").getValue(String.class);
                         if (SID.equals(username)) {
-                            tablereference.child(SID).child("Table - " + Table).addListenerForSingleValueEvent(new ValueEventListener() {
+                            tablereference.child(SID).child(Table).addListenerForSingleValueEvent(new ValueEventListener() {
                                 @Override
                                 public void onDataChange(@NonNull DataSnapshot snapshot) {
                                     String status = snapshot.child("availibility").getValue(String.class);

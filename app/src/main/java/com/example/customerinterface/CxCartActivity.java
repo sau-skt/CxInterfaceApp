@@ -50,7 +50,7 @@ public class CxCartActivity extends AppCompatActivity {
         cxCartData = FirebaseDatabase.getInstance().getReference("CxCart").child(username).child(uniqueId);
         cxinvoicenumber = FirebaseDatabase.getInstance().getReference("SID").child(username).child("invoicenumber");
         cxorderreceived = FirebaseDatabase.getInstance().getReference("CxOrder").child(username);
-        tablereference = FirebaseDatabase.getInstance().getReference("TableInfo").child(username).child("Table - " + tableId);
+        tablereference = FirebaseDatabase.getInstance().getReference("TableInfo").child(username).child(tableId);
         recyclerView = findViewById(R.id.activity_cx_cart_rv);
         layoutManager = new LinearLayoutManager(CxCartActivity.this);
         recyclerView.setLayoutManager(layoutManager);
@@ -125,6 +125,7 @@ public class CxCartActivity extends AppCompatActivity {
                             cxorderreceived.child(String.valueOf(invoicenumber)).child("invoicedate").setValue(dateString);
                             tablereference.child("availibility").setValue("false");
                             tablereference.child("invoicenumber").setValue(String.valueOf(invoicenumber));
+                            tablereference.child("tableid").setValue(tableId);
                             cxCartData.removeValue();
                             Intent intent = new Intent(CxCartActivity.this, OrderInvoiceActivity.class);
                             intent.putExtra("date",dateString);
