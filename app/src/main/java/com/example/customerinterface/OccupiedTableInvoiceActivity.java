@@ -5,8 +5,11 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.view.ViewTreeObserver;
+import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -31,6 +34,7 @@ public class OccupiedTableInvoiceActivity extends AppCompatActivity {
     int qtylist = 0;
     int itemtotal = 0;
     float ordertotal;
+    Button make_payment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,6 +44,7 @@ public class OccupiedTableInvoiceActivity extends AppCompatActivity {
         tableId = getIntent().getStringExtra("table");
         invoicenumbertv = findViewById(R.id.invoice_number_textview);
         invoicedatetv = findViewById(R.id.invoice_date_textview);
+        make_payment = findViewById(R.id.make_payment);
         total = findViewById(R.id.item_total_textview);
         item_name_list = findViewById(R.id.item_name_list_textview);
         item_qty_list = findViewById(R.id.item_qty_list_textview);
@@ -171,6 +176,14 @@ public class OccupiedTableInvoiceActivity extends AppCompatActivity {
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
 
+            }
+        });
+
+        make_payment.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Tablereference.child("availibility").setValue("collect payment");
+                Toast.makeText(OccupiedTableInvoiceActivity.this, "Assigned person is coming to receive payment", Toast.LENGTH_SHORT).show();
             }
         });
     }

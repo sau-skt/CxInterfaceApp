@@ -24,8 +24,8 @@ public class OrderInvoiceActivity extends AppCompatActivity {
     int itemtotal, invoice_number;
     int qtylist = 0;
     float ordertotal = 0;
-    String username, date;
-    DatabaseReference taxdata;
+    String username, date, tableId;
+    DatabaseReference taxdata, tablereference;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,12 +40,14 @@ public class OrderInvoiceActivity extends AppCompatActivity {
         calculation = findViewById(R.id.cal_textview);
         username = getIntent().getStringExtra("username");
         date = getIntent().getStringExtra("date");
+        tableId = getIntent().getStringExtra("tableId");
         taxdata = FirebaseDatabase.getInstance().getReference("TaxData").child(username);
         itemnamelist = getIntent().getStringArrayListExtra("itemnamelist");
         itempricelist = getIntent().getStringArrayListExtra("itempricelist");
         itemqtylist = getIntent().getStringArrayListExtra("itemqtylist");
         itemtotal = getIntent().getIntExtra("itemtotal",0);
         invoice_number = getIntent().getIntExtra("invoicenumber",0);
+        tablereference = FirebaseDatabase.getInstance().getReference("TableInfo").child(username).child(tableId);
 
         invoice_date.setText("Invoice Date - " + date);
 
@@ -74,6 +76,7 @@ public class OrderInvoiceActivity extends AppCompatActivity {
                 float roundedNum = Math.round(ordertotal * 100.0) / 100.0f;
                 String formattedNum = String.format("%.2f", roundedNum);
                 calculation.append(formattedNum);
+                tablereference.child("totalamount").setValue(formattedNum);
             }
 
             @Override
