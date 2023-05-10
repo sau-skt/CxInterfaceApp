@@ -25,7 +25,7 @@ public class OrderInvoiceActivity extends AppCompatActivity {
     int qtylist = 0;
     float ordertotal = 0;
     String username, date, tableId;
-    DatabaseReference taxdata, tablereference;
+    DatabaseReference taxdata, tablereference,cxorderreference;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,6 +48,7 @@ public class OrderInvoiceActivity extends AppCompatActivity {
         itemtotal = getIntent().getIntExtra("itemtotal",0);
         invoice_number = getIntent().getIntExtra("invoicenumber",0);
         tablereference = FirebaseDatabase.getInstance().getReference("TableInfo").child(username).child(tableId);
+        cxorderreference = FirebaseDatabase.getInstance().getReference("CxOrder").child(username).child(String.valueOf(invoice_number));
 
         invoice_date.setText("Invoice Date - " + date);
 
@@ -70,12 +71,15 @@ public class OrderInvoiceActivity extends AppCompatActivity {
                     float roundednum = Math.round((itemtotal * (Float.parseFloat(taxpercentlist.get(i))) / 100) * 100.0) / 100.0f;
                     String formattednum = String.format("%.2f", roundednum);
                     calculation.append(formattednum + "\n");
+                    cxorderreference.child(taxnamelist.get(i)).child("taxamount").setValue(formattednum);
+                    cxorderreference.child(taxnamelist.get(i)).child("rate").setValue(taxpercentlist.get(i) + "% ");
                     ordertotal = ordertotal + (Float.parseFloat(formattednum));
                 }
                 total.append("Total");
                 float roundedNum = Math.round(ordertotal * 100.0) / 100.0f;
                 String formattedNum = String.format("%.2f", roundedNum);
                 calculation.append(formattedNum);
+                cxorderreference.child("invoicetotal").setValue(formattedNum);
                 tablereference.child("totalamount").setValue(formattedNum);
             }
 

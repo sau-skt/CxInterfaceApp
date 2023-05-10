@@ -72,10 +72,12 @@ public class OccupiedTableInvoiceActivity extends AppCompatActivity {
                             String name = dataSnapshot.child("itemname").getValue(String.class);
                             String qty = dataSnapshot.child("itemqty").getValue(String.class);
                             String total = dataSnapshot.child("itemtotal").getValue(String.class);
-                            ItemNameList.add(name);
-                            ItemQtyList.add(qty);
-                            ItemPriceList.add(total);
-                            ItemTotalList.add(total);
+                            if (total != null && !total.isEmpty()) {
+                                ItemNameList.add(name);
+                                ItemQtyList.add(qty);
+                                ItemPriceList.add(total);
+                                ItemTotalList.add(total);
+                            }
                         }
 
                         for (int i = 0; i < ItemNameList.size(); i++) {

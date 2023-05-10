@@ -123,6 +123,7 @@ public class CxCartActivity extends AppCompatActivity {
                                 cxorderreceived.child(String.valueOf(invoicenumber)).child(ItemIds.get(i)).child("itemtotal").setValue(ItemTotal.get(i));
                             }
                             cxorderreceived.child(String.valueOf(invoicenumber)).child("invoicedate").setValue(dateString);
+                            cxorderreceived.child(String.valueOf(invoicenumber)).child("invoicesubtotal").setValue(ordertotal.getText().toString());
                             tablereference.child("availibility").setValue("false");
                             tablereference.child("invoicenumber").setValue(String.valueOf(invoicenumber));
                             tablereference.child("tableid").setValue(tableId);
