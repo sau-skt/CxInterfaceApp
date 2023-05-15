@@ -131,7 +131,7 @@ public class OccupiedTableInvoiceActivity extends AppCompatActivity {
                             }
                         });
 
-                        for (int i = 0; i < ItemTotalList.size()-1; i++) {
+                        for (int i = 0; i < ItemTotalList.size(); i++) {
                             itemtotal = itemtotal + Integer.parseInt(ItemTotalList.get(i));
                         }
                         taxdata.addListenerForSingleValueEvent(new ValueEventListener() {
