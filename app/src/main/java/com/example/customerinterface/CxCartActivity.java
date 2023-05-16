@@ -25,7 +25,7 @@ import java.util.Locale;
 
 public class CxCartActivity extends AppCompatActivity {
 
-    DatabaseReference cxCartData, cxinvoicenumber, cxorderreceived, tablereference;
+    DatabaseReference cxCartData, cxinvoicenumber, cxorderreceived, tablereference, kdsitemsreference;
     String uniqueId, username, tableId;
     ArrayList<String> ItemName = new ArrayList<>();
     ArrayList<String> ItemPrice = new ArrayList<>();
@@ -51,6 +51,7 @@ public class CxCartActivity extends AppCompatActivity {
         cxinvoicenumber = FirebaseDatabase.getInstance().getReference("SID").child(username).child("invoicenumber");
         cxorderreceived = FirebaseDatabase.getInstance().getReference("CxOrder").child(username);
         tablereference = FirebaseDatabase.getInstance().getReference("TableInfo").child(username).child(tableId);
+        kdsitemsreference = FirebaseDatabase.getInstance().getReference("KDSItems").child(username);
         recyclerView = findViewById(R.id.activity_cx_cart_rv);
         layoutManager = new LinearLayoutManager(CxCartActivity.this);
         recyclerView.setLayoutManager(layoutManager);
@@ -121,7 +122,12 @@ public class CxCartActivity extends AppCompatActivity {
                                 cxorderreceived.child(String.valueOf(invoicenumber)).child(ItemIds.get(i)).child("itemqty").setValue(ItemQty.get(i));
                                 cxorderreceived.child(String.valueOf(invoicenumber)).child(ItemIds.get(i)).child("itemId").setValue(ItemIds.get(i));
                                 cxorderreceived.child(String.valueOf(invoicenumber)).child(ItemIds.get(i)).child("itemtotal").setValue(ItemTotal.get(i));
+                                kdsitemsreference.child(String.valueOf(invoicenumber)).child(ItemIds.get(i)).child("itemname").setValue(ItemName.get(i));
+                                kdsitemsreference.child(String.valueOf(invoicenumber)).child(ItemIds.get(i)).child("itemqty").setValue(ItemQty.get(i));
                             }
+                            kdsitemsreference.child(String.valueOf(invoicenumber)).child("invoicenumber").setValue(String.valueOf(invoicenumber));
+                            kdsitemsreference.child(String.valueOf(invoicenumber)).child("tableid").setValue(tableId);
+                            kdsitemsreference.child(String.valueOf(invoicenumber)).child("orderstatus").setValue("To Be Prepared");
                             cxorderreceived.child(String.valueOf(invoicenumber)).child("invoicedate").setValue(dateString);
                             cxorderreceived.child(String.valueOf(invoicenumber)).child("order_status").setValue("open_order");
                             cxorderreceived.child(String.valueOf(invoicenumber)).child("invoicesubtotal").setValue(ordertotal.getText().toString());
@@ -129,6 +135,7 @@ public class CxCartActivity extends AppCompatActivity {
                             tablereference.child("invoicenumber").setValue(String.valueOf(invoicenumber));
                             tablereference.child("tableid").setValue(tableId);
                             cxCartData.removeValue();
+                            kdsitemsreference.child("change").setValue("true");
                             Intent intent = new Intent(CxCartActivity.this, OrderInvoiceActivity.class);
                             intent.putExtra("date",dateString);
                             intent.putExtra("invoicenumber", invoicenumber);
