@@ -146,6 +146,7 @@ public class CxCartActivity extends AppCompatActivity {
                             intent.putExtra("itemtotal", sum);
                             intent.putExtra("username", username);
                             intent.putExtra("tableId",tableId);
+                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
                             startActivity(intent);
                             finish();
                         }
