@@ -18,6 +18,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
@@ -26,11 +27,11 @@ public class AddItemToCartActivityAdapter extends RecyclerView.Adapter<RecyclerV
     private static final int CATEGORY_VIEW_TYPE = 0;
     private static final int ITEM_VIEW_TYPE = 1;
 
-    private ArrayList<String> item_or_category, CategoryList, ItemsList, ItemsPrice, ItemsDesc, ItemsType, ItemsIdList, ItemsCategoryList;
+    private ArrayList<String> item_or_category, CategoryList, ItemsList, ItemsPrice, ItemsDesc, ItemsType, ItemsIdList, ItemsCategoryList, ItemImageUrlList;
     String username, uniqueid;
     DatabaseReference cxCartData;
 
-    public AddItemToCartActivityAdapter(ArrayList<String> item_or_category, ArrayList<String> CategoryList, ArrayList<String> ItemsList, ArrayList<String> ItemsPrice, ArrayList<String> ItemsDesc, ArrayList<String> ItemsType, ArrayList<String> ItemIdList, String username, String uniqueid, ArrayList<String> ItemsCategoryList) {
+    public AddItemToCartActivityAdapter(ArrayList<String> item_or_category, ArrayList<String> CategoryList, ArrayList<String> ItemsList, ArrayList<String> ItemsPrice, ArrayList<String> ItemsDesc, ArrayList<String> ItemsType, ArrayList<String> ItemIdList, String username, String uniqueid, ArrayList<String> ItemsCategoryList, ArrayList<String> ItemImageUrlList) {
         this.item_or_category = item_or_category;
         this.CategoryList = CategoryList;
         this.ItemsList = ItemsList;
@@ -41,7 +42,9 @@ public class AddItemToCartActivityAdapter extends RecyclerView.Adapter<RecyclerV
         this.ItemsIdList = ItemIdList;
         this.username = username;
         this.uniqueid = uniqueid;
+        this.ItemImageUrlList = ItemImageUrlList;
         cxCartData = FirebaseDatabase.getInstance().getReference("CxCart").child(username);
+        Log.e("QWE", String.valueOf(ItemImageUrlList));
     }
 
     @Override
@@ -77,6 +80,9 @@ public class AddItemToCartActivityAdapter extends RecyclerView.Adapter<RecyclerV
             ((ItemViewHolder) holder).ItemPrice.setText("\u20B9 " + ItemsPrice.get(position));
             ((ItemViewHolder) holder).ItemDesc.setText(ItemsDesc.get(position));
             ((ItemViewHolder) holder).cardView.setCardBackgroundColor(Color.parseColor("#FFFFFF"));
+            if (ItemImageUrlList.get(position) != null) {
+                Picasso.get().load(ItemImageUrlList.get(position)).into(((ItemViewHolder) holder).ItemImage);
+            }
             if (ItemsType.get(position).equals("Veg")) {
                 ((ItemViewHolder) holder).ItemType.setImageResource(R.drawable.vegetarian_food);
             } else {
@@ -124,7 +130,7 @@ public class AddItemToCartActivityAdapter extends RecyclerView.Adapter<RecyclerV
 
     public static class ItemViewHolder extends RecyclerView.ViewHolder {
         TextView ItemName, ItemDesc, ItemPrice;
-        ImageView ItemType;
+        ImageView ItemType, ItemImage;
         CardView cardView;
 
         public ItemViewHolder(@NonNull View itemView) {
@@ -135,6 +141,7 @@ public class AddItemToCartActivityAdapter extends RecyclerView.Adapter<RecyclerV
             ItemPrice = itemView.findViewById(R.id.itemprice);
             ItemType = itemView.findViewById(R.id.itemtype);
             cardView = itemView.findViewById(R.id.cardviewtouch);
+            ItemImage = itemView.findViewById(R.id.nt);
         }
     }
 

@@ -32,6 +32,7 @@ public class AddItemToCartActivity extends AppCompatActivity {
     ArrayList<String> ItemsDescList = new ArrayList<>();
     ArrayList<String> ItemsTypeList = new ArrayList<>();
     ArrayList<String> ItemIdList = new ArrayList<>();
+    ArrayList<String> ItemImageUrlList = new ArrayList<>();
     ArrayList<String> Item_Or_Category = new ArrayList<>();
     RecyclerView recyclerView;
     RecyclerView.LayoutManager layoutManager;
@@ -52,7 +53,7 @@ public class AddItemToCartActivity extends AppCompatActivity {
         layoutManager = new LinearLayoutManager(AddItemToCartActivity.this);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setHasFixedSize(true);
-        adapter = new AddItemToCartActivityAdapter(Item_Or_Category, Categorylist, Itemslist,ItemsPriceList, ItemsDescList, ItemsTypeList, ItemIdList, username, uniqueid, ItemsCategoryList);
+        adapter = new AddItemToCartActivityAdapter(Item_Or_Category, Categorylist, Itemslist,ItemsPriceList, ItemsDescList, ItemsTypeList, ItemIdList, username, uniqueid, ItemsCategoryList, ItemImageUrlList);
         recyclerView.setAdapter(adapter);
         Cxcategorydatabasereference = FirebaseDatabase.getInstance().getReference("SIDCxMenu").child(username);
         Cxitemdatabasereference = FirebaseDatabase.getInstance().getReference("SIDCxMenu").child(username);
@@ -64,6 +65,7 @@ public class AddItemToCartActivity extends AppCompatActivity {
                 Itemslist.clear();
                 ItemsCategoryList.clear();
                 Item_Or_Category.clear();
+                ItemImageUrlList.clear();
                 for (DataSnapshot categorySnapshot : dataSnapshot.getChildren()) {
                     String category = categorySnapshot.getKey();
                     Cxitemdatabasereference.child(category).addValueEventListener(new ValueEventListener() {
@@ -77,6 +79,7 @@ public class AddItemToCartActivity extends AppCompatActivity {
                             ItemsDescList.add(category);
                             ItemsTypeList.add(category);
                             ItemIdList.add(category);
+                            ItemImageUrlList.add(category);
                             for (DataSnapshot itemSnapshot : snapshot.getChildren()) {
                                 String itemId = itemSnapshot.getKey();
                                 String itemName = itemSnapshot.child("itemname").getValue(String.class);
@@ -85,6 +88,7 @@ public class AddItemToCartActivity extends AppCompatActivity {
                                 String itemDesc = itemSnapshot.child("itemdescription").getValue(String.class);
                                 String itemType = itemSnapshot.child("itemtype").getValue(String.class);
                                 String itemStock = itemSnapshot.child("instock").getValue(String.class);
+                                String itemimageu = itemSnapshot.child("itemimage").getValue(String.class);
                                 if (itemStock.equals("true")){
                                     Itemslist.add(itemName);
                                     ItemsCategoryList.add(itemcategoryname);
@@ -94,6 +98,8 @@ public class AddItemToCartActivity extends AppCompatActivity {
                                     ItemIdList.add(itemId);
                                     Item_Or_Category.add("Item");
                                     Categorylist.add(itemName);
+                                    ItemImageUrlList.add(itemimageu);
+                                    Log.e("ASD", String.valueOf(itemimageu));
                                 }
                             }
                             adapter.notifyDataSetChanged();
